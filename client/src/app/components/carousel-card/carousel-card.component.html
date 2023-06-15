@@ -1,9 +1,15 @@
 <!--TODO: bind href to the appropriate local URL for the playlist.-->
-<a>
-<!--TODO bind src with the playlist image URL-->
-<img class="d-block w-100">
-<div class="carousel-caption d-none d-md-block">
-	<!--TODO: populate h5 with the playlist name-->
-	<h5>???</h5>
-</div>
+<a href="resource.href">
+	<!--TODO bind src with the playlist image URL-->
+	<img class="d-block w-100" [src]="resource.imageURL">
+	<div class="carousel-caption d-none d-md-block">
+		<!--TODO: populate h5 with the playlist name-->
+		<h5>{{resource.name}}</h5>
+	</div>
 </a>
+<div>
+	<h5>
+		{{resource.name}}
+	</h5>
+</div>
+<app-vega-viz [resourceId]="resource.id"></app-vega-viz>

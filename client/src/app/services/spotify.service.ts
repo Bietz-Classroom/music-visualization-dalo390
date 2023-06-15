@@ -7,6 +7,7 @@ import { TrackData } from '../data/track-data';
 import { ResourceData } from '../data/resource-data';
 import { ProfileData } from '../data/profile-data';
 import { TrackFeature } from '../data/track-feature';
+import { parse } from 'vega';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +36,26 @@ export class SpotifyService {
 
   searchFor(category:string, resource:string):Promise<ResourceData[]> {
     //TODO: identify the search endpoint in the express webserver (routes/index.js) and send the request to express.
-    //Make sure you're encoding the resource with encodeURIComponent().
+    //Make sure you're encoding the resource with encoeURIComponent().
     //Depending on the category (artist, track, album, playlist, etc.), return an array of that type of data.
-    //JavaScript's "map" function might be useful for this, but there are other ways of building the array.
-    return null as any;
+    //JavaScript's "map" function might be useful for this, but thered are other ways of building the array.
+    let encodededResource =  encodeURIComponent(resource);
+    //let result = this.sendRequestToExpress('/search/' + category +'/' + encodededResource);
+    //let resultArr = result.playlists;
+    return this.sendRequestToExpress('/search/' + category +'/' + encodededResource).then((data) => {
+      let parsedResponse=data.playlists.items;
+      let mappedData=parsedResponse.map((item) => {
+        return{
+          url:item.href,
+          imageURL:item.images[0].url,
+          name:item.name,
+          tracks:item.tracks,
+          id:item.id
+        };
+      });
+      //console.log(mappedData);
+      return mappedData;
+    });
   }
 
   getArtist(artistId:string):Promise<ArtistData> {
@@ -77,8 +94,45 @@ export class SpotifyService {
     return null as any;
   }
 
-  getAudioFeaturesForTrack(trackId:string):Promise<TrackFeature[]> {
+  getAudioFeaturesForTrack(trackId:string):Promise<TrackFeature> {
     //TODO: use the audio features for track endpoint to make a request to express.
-    return null as any;
+    return this.sendRequestToExpress('/track-audio-features/' + trackId).then((data) =>{
+      return new TrackFeature("energy",data.energy);
+    });
+  }
+
+  getAudioFeaturesForTracks(trackId:string):Promise<TrackFeature[]> {
+    //TODO: use the audio features for track endpoint to make a request to express.
+    let encodeded =  encodeURIComponent(trackId);
+    return this.sendRequestToExpress('/tracks-audio-features/' + encodeded).then((data) =>{
+      let parsedResponse=data.audio_features;
+      let mappedData=parsedResponse.map((item) => {
+        return{
+          id:item.id,
+          percent:item.energy
+        };
+      })
+      return mappedData;
+    });
+  }
+
+
+  getTracksForPlaylist(playlistID:string):Promise<TrackData[]> {
+    console.log("in services");
+    let encoded = encodeURIComponent(playlistID);
+    return this.sendRequestToExpress('/playlists-tracks/'+ encoded).then((data) => {      
+      let parsedResponse=data.items;
+      let mappedData=parsedResponse.map((item) => {
+        return{
+          artists:item.track.artists,
+          name: item.track.name,
+          id: item.track.id
+        };
+      });
+      //console.log("mapping", mappedData);
+      
+      return mappedData;
+    });
+
   }
 }
