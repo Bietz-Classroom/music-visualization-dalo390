@@ -37,29 +37,25 @@ export class VegaVizComponent implements OnInit {
     });
   }
 
-
+  //get tracks and features of playlist
   searchForTracks(): Promise<void>{
-    //TODO: call search function in spotifyService with playlist href to get tracks array
-    //console.log("searching " + this.resourceId);
-    return this.spotifyService.getTracksForPlaylist(this.resourceId).then((result) => {
-      //console.log("track info are ", result);
-      return result;
-    }).then((result) => {
+    //call search function in spotifyService with playlist id to get tracks array
+    return this.spotifyService.getTracksForPlaylist(this.resourceId).then((tracks) => {
+      return tracks;
+    }).then((tracks) => {
+      //concatenate all track ids
       let fullString="";
-      for(let track of result){
+      for(let track of tracks){
         fullString += track.id + ",";
       } 
-      return this.spotifyService.getAudioFeaturesForTracks(fullString).then((feature) => {
-        //console.log("feature info ", feature);
-        this.trackFeature=feature.map((item, index) => {
+      //call search function in spotifyService with track ids to get features of tracks
+      return this.spotifyService.getAudioFeaturesForTracks(fullString).then((features) => {
+        this.trackFeature=features.map((item, index) => {
           const trackWithFeatures:TrackFeature={
             id: item.id,
             energy: item.energy,
             danceability: item.danceability,
-            name: result[index].name,
-            percent: 0,
-            percentageString: '',
-            color: undefined
+            name: tracks[index].name,
           }
           return trackWithFeatures;
         });
@@ -68,16 +64,5 @@ export class VegaVizComponent implements OnInit {
     .catch((error) => {
       console.error('Error during search: ', error);
     });
-    //now i have all the tracks, iterate and get the feature information of all tracks    
   }
-/*
-  searchForFeature(track){
-    this.spotifyService.getAudioFeaturesForTrack(track).then((result) => {
-      console.log("feature info ", result);
-      this.trackFeature=result;
-    }).catch((error) => {
-      console.error('Error during search: ', error);
-    });
-  }
-*/
 }

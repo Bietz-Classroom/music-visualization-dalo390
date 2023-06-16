@@ -43,8 +43,8 @@ export class SpotifyService {
     //let result = this.sendRequestToExpress('/search/' + category +'/' + encodededResource);
     //let resultArr = result.playlists;
     return this.sendRequestToExpress('/search/' + category +'/' + encodededResource).then((data) => {
-      let parsedResponse=data.playlists.items;
-      let mappedData=parsedResponse.map((item) => {
+      let playlistItems=data.playlists.items;
+      let mappedData=playlistItems.map((item) => {
         return{
           url:item.href,
           imageURL:item.images[0].url,
@@ -96,17 +96,15 @@ export class SpotifyService {
 
   getAudioFeaturesForTrack(trackId:string):Promise<TrackFeature> {
     //TODO: use the audio features for track endpoint to make a request to express.
-    return this.sendRequestToExpress('/track-audio-features/' + trackId).then((data) =>{
-      return new TrackFeature("energy",data.energy);
-    });
+    return null as any;
   }
 
   getAudioFeaturesForTracks(trackId:string):Promise<TrackFeature[]> {
     //TODO: use the audio features for track endpoint to make a request to express.
     let encodeded =  encodeURIComponent(trackId);
     return this.sendRequestToExpress('/tracks-audio-features/' + encodeded).then((data) =>{
-      let parsedResponse=data.audio_features;
-      let mappedData=parsedResponse.filter((item) => item !== null).map((item) => {
+      let dataFeatures=data.audio_features;
+      let mappedData=dataFeatures.filter((item) => item !== null).map((item) => {
         return{
           id:item.id,
           energy:item.energy,
@@ -121,16 +119,14 @@ export class SpotifyService {
   getTracksForPlaylist(playlistID:string):Promise<TrackData[]> {
     let encoded = encodeURIComponent(playlistID);
     return this.sendRequestToExpress('/playlists-tracks/'+ encoded).then((data) => {      
-      let parsedResponse=data.items;
-      let mappedData=parsedResponse.map((item) => {
+      let dataTracks=data.items;
+      let mappedData=dataTracks.map((item) => {
         return{
           artists:item.track.artists,
           name: item.track.name,
           id: item.track.id
         };
       });
-      //console.log("mapping", mappedData);
-      
       return mappedData;
     });
 

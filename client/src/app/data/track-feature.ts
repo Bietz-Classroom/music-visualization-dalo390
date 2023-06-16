@@ -5,20 +5,10 @@ export class TrackFeature {
 
 	id:string;
 	name:string;
-	percent:number;
 	energy:number;
 	danceability:number
 
-	constructor(feature:string, percent:number) {
+	constructor(feature:string) {
 		this.name = feature;
-		this.percent = percent;
-	}
-
-	get percentageString() {
-		return (this.percent*100).toFixed() + '%';
-	}
-
-	get color() {
-		return chroma.mix('red', 'green', this.percent, 'hsl').hex();
 	}
 }
