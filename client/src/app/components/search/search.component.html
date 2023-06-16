@@ -1,14 +1,12 @@
 <h1>Search Spotify</h1>
-<!--TODO: bind input's model to searchString-->
+<!--bind input's model to searchString-->
 <input [(ngModel)]="searchString" placeholder="Search">
 
-<!--TODO: Call search function when the button is clicked-->
+<!--Call search function when the button is clicked-->
 <button class="btn btn-light" (click)="search()">Search</button>
-<!--TODO: Display results. One option: use a carousel component. Bind carousel's resources and give it a static carouselId.-->
-<div>
-    <!--{{resources}}-->
+<div *ngIf="message">{{message}}</div>
+
+<!--Display results. Bind carousel's resources and give it a static carouselId.-->
+<div class="container">
+    <app-carousel class="carousel" [carouselId]="searchString" [resources]="resources">Here</app-carousel>
 </div>
-<div>
-    <app-carousel [carouselId]="searchString" [resources]="resources">Here</app-carousel>
-</div>
-<!--bind vega lite data to each carousel card displayed so it changes each time the carousel changes?-->

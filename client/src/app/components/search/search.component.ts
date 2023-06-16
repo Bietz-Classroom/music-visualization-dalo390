@@ -15,6 +15,7 @@ export class SearchComponent implements OnInit {
   searchString:string;
   searchCategory:string = 'playlist';
   resources:ResourceData[];
+  message:string = '';
 
   constructor(private spotifyService:SpotifyService) { }
 
@@ -23,8 +24,15 @@ export class SearchComponent implements OnInit {
 
   search() {
     //TODO: call search function in spotifyService and parse response
-    this.spotifyService.searchFor(this.searchCategory, this.searchString).then((result) => {
-      this.resources=result;
+    this.spotifyService.searchFor(this.searchCategory, this.searchString).then((resourceData) => {
+      if(resourceData.length > 0){
+        this.resources=resourceData;
+        this.message ='';
+      }
+      else{
+        this.resources=resourceData;
+        this.message = 'No search results found.';
+      }
     }).catch((error) => {
       console.error('Error during search: ', error);
     });    

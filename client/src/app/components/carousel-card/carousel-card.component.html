@@ -1,15 +1,14 @@
-<!--TODO: bind href to the appropriate local URL for the playlist.-->
-<a href="resource.href">
-	<!--TODO bind src with the playlist image URL-->
-	<img class="d-block w-100" [src]="resource.imageURL">
-	<div class="carousel-caption d-none d-md-block">
-		<!--TODO: populate h5 with the playlist name-->
-		<h5>{{resource.name}}</h5>
-	</div>
-</a>
+<!-- bind src with the playlist image URL-->
+<img class="d-block w-100" [src]="resource.imageURL">
+<div class="carousel-caption d-none d-md-block"></div>
 <div>
-	<h5>
+	<h5 style="margin:10px 0px 50px 0px;">
 		{{resource.name}}
 	</h5>
 </div>
-<app-vega-viz [resourceId]="resource.id"></app-vega-viz>
+
+<!--bind vega lite data to each carousel card displayed so it changes each time the carousel changes-->
+<div class = "visualization">
+	<app-vega-viz [resourceId]="resource.id"></app-vega-viz>
+	<h5>Visualization of Playlist</h5>
+</div>

@@ -6,6 +6,8 @@ export class TrackFeature {
 	id:string;
 	name:string;
 	percent:number;
+	energy:number;
+	danceability:number
 
 	constructor(feature:string, percent:number) {
 		this.name = feature;

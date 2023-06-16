@@ -23,15 +23,13 @@ export class VegaVizComponent implements OnInit {
     this.searchForTracks().then(() => {
       this.spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "A simple bar chart with embedded data.",
-        "title": "Energy of Playlist",
-        "data": {
-          "values": this.trackFeature
-        },
-        "mark": "bar",
+        "description": "Energy and Danceability of Songs",
+        "data": {"values" : this.trackFeature},
+        "mark": "point",
         "encoding": {
-          "x": { "field": "id", "type": "nominal", "axis": { "labelAngle": 0 } },
-          "y": { "field": "percent", "type": "quantitative" }
+          "tooltip": {"field": "name", "type": "nominal"},
+          "x": {"field": "energy", "type": "quantitative"},
+          "y": {"field": "danceability", "type": "quantitative"}
         }
       };
 
@@ -51,11 +49,20 @@ export class VegaVizComponent implements OnInit {
       for(let track of result){
         fullString += track.id + ",";
       } 
-      return this.spotifyService.getAudioFeaturesForTracks(fullString).then((result) => {
-        //console.log("feature info ", result);
-        this.trackFeature=result;
-      }).catch((error) => {
-        console.error('Error during search: ', error);
+      return this.spotifyService.getAudioFeaturesForTracks(fullString).then((feature) => {
+        //console.log("feature info ", feature);
+        this.trackFeature=feature.map((item, index) => {
+          const trackWithFeatures:TrackFeature={
+            id: item.id,
+            energy: item.energy,
+            danceability: item.danceability,
+            name: result[index].name,
+            percent: 0,
+            percentageString: '',
+            color: undefined
+          }
+          return trackWithFeatures;
+        });
       });
     })
     .catch((error) => {

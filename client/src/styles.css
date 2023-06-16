@@ -21,3 +21,35 @@ button, .btn {
 a {
 	color: var(--bs-orange);
 }
+
+.row{
+	background-color: #1DB954;
+	font-family: 'Allerta Stencil', sans-serif;
+	color: #191414;
+}
+
+.container{
+	display:flex;
+	justify-content: center;
+	
+}
+
+.carousel{
+	margin: auto;
+	text-align: center;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  height: 400px; 
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 400px; 
+}
+
+
+.playlist-title{
+	color: white;
+}

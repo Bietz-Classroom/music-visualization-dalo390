@@ -106,19 +106,19 @@ export class SpotifyService {
     let encodeded =  encodeURIComponent(trackId);
     return this.sendRequestToExpress('/tracks-audio-features/' + encodeded).then((data) =>{
       let parsedResponse=data.audio_features;
-      let mappedData=parsedResponse.map((item) => {
+      let mappedData=parsedResponse.filter((item) => item !== null).map((item) => {
         return{
           id:item.id,
-          percent:item.energy
+          energy:item.energy,
+          danceability:item.danceability
         };
-      })
+      });
       return mappedData;
     });
   }
 
 
   getTracksForPlaylist(playlistID:string):Promise<TrackData[]> {
-    console.log("in services");
     let encoded = encodeURIComponent(playlistID);
     return this.sendRequestToExpress('/playlists-tracks/'+ encoded).then((data) => {      
       let parsedResponse=data.items;
